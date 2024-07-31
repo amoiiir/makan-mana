@@ -28,13 +28,55 @@ class _HomePage extends State<HomePage> {
       appBar: appBar(),
       backgroundColor: Colors.blueGrey[50],
       //kenapa bila nak tambah banyak kena dalam children
-      body: Column(
+      body: ListView(
         children: [
           _searchBar(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
+          _fortuneWheel(),
+          const SizedBox(height: 30),
+          Container(
+            margin: const EdgeInsets.only(left: 60, right: 60),
+            child: ElevatedButton(
+              onPressed: (){
+                //do something
+              },
+              child: const Text(
+                'Spin the wheel',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+              style: ButtonStyle(
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)
+                  )
+                ),
+                elevation: WidgetStateProperty.all(5),
+              ),
+            ),
+          )
         ],
       )
     );
+  }
+
+  Container _fortuneWheel() {
+    return Container(
+          height: 300,
+          child: FortuneWheel(
+            items: const [
+              FortuneItem(child: Text('KFC', style: TextStyle(color: Colors.white, fontSize: 20))),
+              FortuneItem(child: Text('McDonalds', style: TextStyle(color: Colors.white, fontSize: 20))),
+              FortuneItem(child: Text('Pizza Hut', style: TextStyle(color: Colors.white, fontSize: 20))),
+              FortuneItem(child: Text('Subway', style: TextStyle(color: Colors.white, fontSize: 20))),
+              FortuneItem(child: Text('Starbucks', style: TextStyle(color: Colors.white, fontSize: 20))),
+              FortuneItem(child: Text('Nandos', style: TextStyle(color: Colors.white, fontSize: 20))),
+            ],
+          ),
+        );
   }
 
   Container _searchBar() {
