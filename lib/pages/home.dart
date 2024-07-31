@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
@@ -16,6 +17,16 @@ class _HomePage extends State<HomePage> {
   StreamController<int> selected = StreamController<int>();
   final myController = TextEditingController();
 
+  List<FortuneItem> items = [
+              FortuneItem(child: Text('KFC', style: TextStyle(color: Colors.white, fontSize: 20))),
+              FortuneItem(child: Text('McDonalds', style: TextStyle(color: Colors.white, fontSize: 20))),
+              // FortuneItem(child: Text('Pizza Hut', style: TextStyle(color: Colors.white, fontSize: 20))),
+              // FortuneItem(child: Text('Subway', style: TextStyle(color: Colors.white, fontSize: 20))),
+              // FortuneItem(child: Text('Starbucks', style: TextStyle(color: Colors.white, fontSize: 20))),
+              // FortuneItem(child: Text('Nandos', style: TextStyle(color: Colors.white, fontSize: 20))),
+            ];
+
+  @override
   void dispose() {
     selected.close();
     super.dispose();
@@ -28,26 +39,30 @@ class _HomePage extends State<HomePage> {
       appBar: appBar(),
       backgroundColor: Colors.blueGrey[50],
       //kenapa bila nak tambah banyak kena dalam children
-      body: ListView(
-        children: [
-          _searchBar(),
-          const SizedBox(height: 30),
-          _fortuneWheel(),
-          const SizedBox(height: 30),
-          Container(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _searchBar(),
+            const SizedBox(height: 15),
+            const Text('Put at least 2 suggestions!!', style: TextStyle(color: Colors.black, fontSize: 16, fontFamily: 'Poppins')),
+            const SizedBox(height: 30),
+            _fortuneWheel(),
+            const SizedBox(height: 30),
+            _spinButton()
+          ],
+        ),
+      )
+    );
+  }
+
+  Container _spinButton() {
+    return Container(
             margin: const EdgeInsets.only(left: 60, right: 60),
             child: ElevatedButton(
               onPressed: (){
-                //do something
+                //spin the wheel
+                selected.add(Random().nextInt(items.length));
               },
-              child: const Text(
-                'Spin the wheel',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.bold
-                ),
-              ),
               style: ButtonStyle(
                 shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -56,24 +71,36 @@ class _HomePage extends State<HomePage> {
                 ),
                 elevation: WidgetStateProperty.all(5),
               ),
+              child: const Text(
+                'Spin the wheel',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.bold
+                ),
+              ),
             ),
-          )
-        ],
-      )
-    );
+          );
   }
 
   Container _fortuneWheel() {
     return Container(
           height: 300,
           child: FortuneWheel(
-            items: const [
-              FortuneItem(child: Text('KFC', style: TextStyle(color: Colors.white, fontSize: 20))),
-              FortuneItem(child: Text('McDonalds', style: TextStyle(color: Colors.white, fontSize: 20))),
-              FortuneItem(child: Text('Pizza Hut', style: TextStyle(color: Colors.white, fontSize: 20))),
-              FortuneItem(child: Text('Subway', style: TextStyle(color: Colors.white, fontSize: 20))),
-              FortuneItem(child: Text('Starbucks', style: TextStyle(color: Colors.white, fontSize: 20))),
-              FortuneItem(child: Text('Nandos', style: TextStyle(color: Colors.white, fontSize: 20))),
+            selected: selected.stream,
+            items: items,
+            physics: CircularPanPhysics(
+              duration: const Duration(seconds: 5),
+              curve: Curves.decelerate
+            ),
+            indicators: const <FortuneIndicator>[
+              FortuneIndicator(
+                alignment: Alignment.topCenter,
+                child: TriangleIndicator(
+                  color: Colors.red,
+                  width: 30.0,
+                ),
+                )
             ],
           ),
         );
@@ -93,22 +120,13 @@ class _HomePage extends State<HomePage> {
         ]
       ),
       child: TextField( 
-        onSubmitted: (myController) {
-          showDialog(context: context, 
-          builder: (BuildContext context){
-            return AlertDialog(
-              title: const Text('Search Result'),
-              content: Text('You have searched for $myController'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Close')
-                )
-              ],
-            );
+        controller: myController,
+        onSubmitted: (text) {
+          debugPrint('Restaurant suggestion: $myController');
+          setState(() {
+            items.add(FortuneItem(child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 20))));
           });
+          myController.clear();
         },
         decoration: InputDecoration(
           hintText: 'Restaurant suggestions',
