@@ -18,12 +18,8 @@ class _HomePage extends State<HomePage> {
   final myController = TextEditingController();
 
   List<FortuneItem> items = [
-              FortuneItem(child: Text('KFC', style: TextStyle(color: Colors.white, fontSize: 20))),
-              FortuneItem(child: Text('McDonalds', style: TextStyle(color: Colors.white, fontSize: 20))),
-              // FortuneItem(child: Text('Pizza Hut', style: TextStyle(color: Colors.white, fontSize: 20))),
-              // FortuneItem(child: Text('Subway', style: TextStyle(color: Colors.white, fontSize: 20))),
-              // FortuneItem(child: Text('Starbucks', style: TextStyle(color: Colors.white, fontSize: 20))),
-              // FortuneItem(child: Text('Nandos', style: TextStyle(color: Colors.white, fontSize: 20))),
+              FortuneItem(child: Text('1st Suggestion', style: TextStyle(color: Colors.white, fontSize: 20))),
+              FortuneItem(child: Text('2nd Suggestion', style: TextStyle(color: Colors.white, fontSize: 20))),
             ];
 
   @override
@@ -49,6 +45,7 @@ class _HomePage extends State<HomePage> {
             _fortuneWheel(),
             const SizedBox(height: 30),
             _spinButton()
+            
           ],
         ),
       )
@@ -57,51 +54,78 @@ class _HomePage extends State<HomePage> {
 
   Container _spinButton() {
     return Container(
-            margin: const EdgeInsets.only(left: 60, right: 60),
-            child: ElevatedButton(
-              onPressed: (){
-                //spin the wheel
-                selected.add(Random().nextInt(items.length));
-              },
-              style: ButtonStyle(
-                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)
-                  )
-                ),
-                elevation: WidgetStateProperty.all(5),
-              ),
-              child: const Text(
-                'Spin the wheel',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.bold
-                ),
-              ),
+      margin: const EdgeInsets.only(left: 60, right: 60),
+      child: Visibility(
+        visible: items.length >= 2,
+        child: ElevatedButton(
+            onPressed: () {
+            //spin the wheel
+            var randNum = Random().nextInt(items.length);
+            selected.add(randNum);
+            var result = (items[randNum].child as Text).data;
+            debugPrint('Result: $result');
+            //add delay
+            Future.delayed(const Duration(seconds: 5), () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Result'),
+                    content: Text("We are going to eat at $result"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Close'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
+
+            },
+          style: ButtonStyle(
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+              )
             ),
-          );
+            elevation: WidgetStateProperty.all(5),
+          ),
+          child: const Text(
+            'Spin the wheel',
+            style: TextStyle(
+              fontSize: 20,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.bold
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Container _fortuneWheel() {
     return Container(
           height: 300,
-          child: FortuneWheel(
-            selected: selected.stream,
-            items: items,
-            physics: CircularPanPhysics(
-              duration: const Duration(seconds: 5),
-              curve: Curves.decelerate
+          child: Visibility(
+            visible: items.length >= 2,
+            child: FortuneWheel(
+              selected: selected.stream,
+              items: items,
+              physics: NoPanPhysics(),
+              indicators: const <FortuneIndicator>[
+                FortuneIndicator(
+                  alignment: Alignment.topCenter,
+                  child: TriangleIndicator(
+                    color: Colors.red,
+                    width: 30.0,
+                  ),
+                  )
+              ],
             ),
-            indicators: const <FortuneIndicator>[
-              FortuneIndicator(
-                alignment: Alignment.topCenter,
-                child: TriangleIndicator(
-                  color: Colors.red,
-                  width: 30.0,
-                ),
-                )
-            ],
           ),
         );
   }
@@ -122,7 +146,7 @@ class _HomePage extends State<HomePage> {
       child: TextField( 
         controller: myController,
         onSubmitted: (text) {
-          debugPrint('Restaurant suggestion: $myController');
+          // items.removeAt(0);
           setState(() {
             items.add(FortuneItem(child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 20))));
           });
