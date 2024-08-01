@@ -64,6 +64,9 @@ class _HomePage extends State<HomePage> {
             selected.add(randNum);
             var result = (items[randNum].child as Text).data;
             debugPrint('Result: $result');
+            if (result == '1st Suggestion' || result == '2nd Suggestion') {
+              result = 'Please input valid suggestions!!';
+            }
             //add delay
             Future.delayed(const Duration(seconds: 5), () {
               showDialog(
@@ -169,7 +172,7 @@ class _HomePage extends State<HomePage> {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(color: Colors.white, width: 0)
-          )
+          ),
         ),
       ),
     );
