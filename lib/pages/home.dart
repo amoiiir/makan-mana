@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
+import 'package:toastification/toastification.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -65,7 +66,45 @@ class _HomePage extends State<HomePage> {
             var result = (items[randNum].child as Text).data;
             debugPrint('Result: $result');
             if (result == '1st Suggestion' || result == '2nd Suggestion') {
-              result = 'Please input valid suggestions!!';
+              //show error dialog
+              toastification.show(
+              context: context, // optional if you use ToastificationWrapper
+              type: ToastificationType.error,
+              style: ToastificationStyle.fillColored,
+              autoCloseDuration: const Duration(seconds: 5),
+              title: Text('Please enter valid suggestions!!'),
+              // you can also use RichText widget for title and description parameters
+              alignment: Alignment.bottomCenter,
+              direction: TextDirection.ltr,
+              animationDuration: const Duration(milliseconds: 300),
+              animationBuilder: (context, animation, alignment, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+              icon: const Icon(Icons.error),
+              showIcon: true, // show or hide the icon
+              primaryColor: Colors.red[100],
+              // backgroundColor: Colors.blue,
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x07000000),
+                  blurRadius: 16,
+                  offset: Offset(0, 16),
+                  spreadRadius: 0,
+                )
+              ],
+              showProgressBar: false,
+              closeButtonShowType: CloseButtonShowType.onHover,
+              closeOnClick: true,
+              pauseOnHover: true,
+            );
+            return;
             }
             //add delay
             Future.delayed(const Duration(seconds: 5), () {
@@ -149,7 +188,52 @@ class _HomePage extends State<HomePage> {
       child: TextField( 
         controller: myController,
         onSubmitted: (text) {
-          // items.removeAt(0);
+          //should not be empty
+          if (text.isEmpty){
+            toastification.show(
+              context: context, // optional if you use ToastificationWrapper
+              type: ToastificationType.error,
+              style: ToastificationStyle.fillColored,
+              autoCloseDuration: const Duration(seconds: 5),
+              title: Text('Suggestion is empty!!'),
+              // you can also use RichText widget for title and description parameters
+              alignment: Alignment.bottomCenter,
+              direction: TextDirection.ltr,
+              animationDuration: const Duration(milliseconds: 300),
+              animationBuilder: (context, animation, alignment, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+              icon: const Icon(Icons.error),
+              showIcon: true, // show or hide the icon
+              primaryColor: Colors.red[100],
+              // backgroundColor: Colors.blue,
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x07000000),
+                  blurRadius: 16,
+                  offset: Offset(0, 16),
+                  spreadRadius: 0,
+                )
+              ],
+              showProgressBar: false,
+              closeButtonShowType: CloseButtonShowType.onHover,
+              closeOnClick: true,
+              pauseOnHover: true,
+            );
+            return;
+          }
+          // check the list if 1st and 2nd suggestion is still there
+          debugPrint('Hello: ${(items[0].child as Text).data}');
+          if ((items[0].child as Text).data == '1st Suggestion') {
+            items.removeAt(0);
+          }
           setState(() {
             items.add(FortuneItem(child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 20))));
           });
