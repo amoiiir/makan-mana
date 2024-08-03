@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'package:toastification/toastification.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -19,9 +18,13 @@ class _HomePage extends State<HomePage> {
   final myController = TextEditingController();
 
   List<FortuneItem> items = [
-              FortuneItem(child: Text('1st Suggestion', style: TextStyle(color: Colors.white, fontSize: 20))),
-              FortuneItem(child: Text('2nd Suggestion', style: TextStyle(color: Colors.white, fontSize: 20))),
-            ];
+    FortuneItem(
+        child: Text('1st Suggestion',
+            style: TextStyle(color: Colors.white, fontSize: 20))),
+    FortuneItem(
+        child: Text('2nd Suggestion',
+            style: TextStyle(color: Colors.white, fontSize: 20))),
+  ];
 
   @override
   void dispose() {
@@ -31,26 +34,27 @@ class _HomePage extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: appBar(),
-      backgroundColor: Colors.blueGrey[50],
-      //kenapa bila nak tambah banyak kena dalam children
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _searchBar(),
-            const SizedBox(height: 15),
-            const Text('Put at least 2 suggestions!!', style: TextStyle(color: Colors.black, fontSize: 16, fontFamily: 'Poppins')),
-            const SizedBox(height: 30),
-            _fortuneWheel(),
-            const SizedBox(height: 30),
-            _spinButton()
-            
-          ],
-        ),
-      )
-    );
+        appBar: appBar(),
+        backgroundColor: Colors.blueGrey[50],
+        //kenapa bila nak tambah banyak kena dalam children
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              _searchBar(),
+              const SizedBox(height: 15),
+              const Text('Put at least 2 suggestions!!',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontFamily: 'Poppins')),
+              const SizedBox(height: 30),
+              _fortuneWheel(),
+              const SizedBox(height: 30),
+              _spinButton()
+            ],
+          ),
+        ));
   }
 
   Container _spinButton() {
@@ -59,7 +63,7 @@ class _HomePage extends State<HomePage> {
       child: Visibility(
         visible: items.length >= 2,
         child: ElevatedButton(
-            onPressed: () {
+          onPressed: () {
             //spin the wheel
             var randNum = Random().nextInt(items.length);
             selected.add(randNum);
@@ -68,43 +72,44 @@ class _HomePage extends State<HomePage> {
             if (result == '1st Suggestion' || result == '2nd Suggestion') {
               //show error dialog
               toastification.show(
-              context: context, // optional if you use ToastificationWrapper
-              type: ToastificationType.error,
-              style: ToastificationStyle.fillColored,
-              autoCloseDuration: const Duration(seconds: 5),
-              title: Text('Please enter valid suggestions!!'),
-              // you can also use RichText widget for title and description parameters
-              alignment: Alignment.bottomCenter,
-              direction: TextDirection.ltr,
-              animationDuration: const Duration(milliseconds: 300),
-              animationBuilder: (context, animation, alignment, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              },
-              icon: const Icon(Icons.error),
-              showIcon: true, // show or hide the icon
-              primaryColor: Colors.red[100],
-              // backgroundColor: Colors.blue,
-              foregroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x07000000),
-                  blurRadius: 16,
-                  offset: Offset(0, 16),
-                  spreadRadius: 0,
-                )
-              ],
-              showProgressBar: false,
-              closeButtonShowType: CloseButtonShowType.onHover,
-              closeOnClick: true,
-              pauseOnHover: true,
-            );
-            return;
+                context: context, // optional if you use ToastificationWrapper
+                type: ToastificationType.error,
+                style: ToastificationStyle.flatColored,
+                autoCloseDuration: const Duration(seconds: 5),
+                title: Text('Please enter valid suggestions!!'),
+                // you can also use RichText widget for title and description parameters
+                alignment: Alignment.bottomCenter,
+                direction: TextDirection.ltr,
+                animationDuration: const Duration(milliseconds: 300),
+                animationBuilder: (context, animation, alignment, child) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+                },
+                icon: const Icon(Icons.error),
+                showIcon: true, // show or hide the icon
+                primaryColor: Colors.red[100],
+                // backgroundColor: Colors.blue,
+                foregroundColor: Colors.black,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x07000000),
+                    blurRadius: 16,
+                    offset: Offset(0, 16),
+                    spreadRadius: 0,
+                  )
+                ],
+                showProgressBar: false,
+                closeButtonShowType: CloseButtonShowType.onHover,
+                closeOnClick: true,
+                pauseOnHover: true,
+              );
+              return;
             }
             //add delay
             Future.delayed(const Duration(seconds: 5), () {
@@ -126,23 +131,19 @@ class _HomePage extends State<HomePage> {
                 },
               );
             });
-
-            },
+          },
           style: ButtonStyle(
             shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)
-              )
-            ),
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10))),
             elevation: WidgetStateProperty.all(5),
           ),
           child: const Text(
             'Spin the wheel',
             style: TextStyle(
-              fontSize: 20,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.bold
-            ),
+                fontSize: 20,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -151,45 +152,42 @@ class _HomePage extends State<HomePage> {
 
   Container _fortuneWheel() {
     return Container(
-          height: 300,
-          child: Visibility(
-            visible: items.length >= 2,
-            child: FortuneWheel(
-              selected: selected.stream,
-              items: items,
-              physics: NoPanPhysics(),
-              indicators: const <FortuneIndicator>[
-                FortuneIndicator(
-                  alignment: Alignment.topCenter,
-                  child: TriangleIndicator(
-                    color: Colors.red,
-                    width: 30.0,
-                  ),
-                  )
-              ],
-            ),
-          ),
-        );
+      height: 300,
+      child: Visibility(
+        visible: items.length >= 2,
+        child: FortuneWheel(
+          selected: selected.stream,
+          items: items,
+          physics: NoPanPhysics(),
+          indicators: const <FortuneIndicator>[
+            FortuneIndicator(
+              alignment: Alignment.topCenter,
+              child: TriangleIndicator(
+                color: Colors.red,
+                width: 30.0,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Container _searchBar() {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
             color: const Color(0xff1D1617).withOpacity(0.11),
             spreadRadius: 0.0,
             blurRadius: 20,
-            offset: const Offset(0, 3)
-          )
-        ]
-      ),
-      child: TextField( 
+            offset: const Offset(0, 3))
+      ]),
+      child: TextField(
         controller: myController,
         onSubmitted: (text) {
           //should not be empty
-          if (text.isEmpty){
+          if (text.isEmpty) {
             toastification.show(
               context: context, // optional if you use ToastificationWrapper
               type: ToastificationType.error,
@@ -231,32 +229,44 @@ class _HomePage extends State<HomePage> {
           }
           // check the list if 1st and 2nd suggestion is still there
           debugPrint('Hello: ${(items[0].child as Text).data}');
-          if ((items[0].child as Text).data == '1st Suggestion') {
-            items.removeAt(0);
-          }
+          debugPrint('Value: ${(items[1].child as Text).data}');
           setState(() {
-            items.add(FortuneItem(child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 20))));
+            if ((items[0].child as Text).data == '1st Suggestion') {
+              items[0] = FortuneItem(
+                  child: Text(text,
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 20)));
+              return;
+            }
+            if ((items[1].child as Text).data == '2nd Suggestion') {
+              items[1] = FortuneItem(
+                  child: Text(text,
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 20)));
+              return;
+            } else {
+              items.add(FortuneItem(
+                  child: Text(text,
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 20))));
+            }
           });
           myController.clear();
         },
         decoration: InputDecoration(
           hintText: 'Restaurant suggestions',
           hintStyle: const TextStyle(
-            color: Colors.grey,
-            fontSize: 16,
-            fontFamily: 'Poppins'
-          ),
-          prefixIcon: const Icon(Icons.question_mark_outlined, color: Colors.grey),
+              color: Colors.grey, fontSize: 16, fontFamily: 'Poppins'),
+          prefixIcon:
+              const Icon(Icons.question_mark_outlined, color: Colors.grey),
           filled: true,
           fillColor: Colors.white,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.white, width: 0)
-          ),
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.white, width: 0)),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.white, width: 0)
-          ),
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.white, width: 0)),
         ),
       ),
     );
@@ -264,18 +274,31 @@ class _HomePage extends State<HomePage> {
 
   AppBar appBar() {
     return AppBar(
-      title: const Text('Makan Mana?',
+      title: const Text(
+        'Makan Mana?',
         style: TextStyle(
-          color: Colors.black,
-          fontSize: 24,
-          fontFamily: 'Poppins',
-          //call font styles from pubspec.yaml
-          fontWeight: FontWeight.bold
-        ),
+            color: Colors.black,
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            //call font styles from pubspec.yaml
+            fontWeight: FontWeight.bold),
       ),
       centerTitle: true,
       elevation: 1,
       backgroundColor: Colors.white,
+      actions: [
+        GestureDetector(
+          
+          onTap: () {
+            // Navigator.pushNamed(context, '/settings');
+            debugPrint('Settings');
+          },
+          child: Container(
+            margin: const EdgeInsets.only(right: 13),
+            child: const Icon(Icons.more_horiz, color: Colors.black)
+          ),
+        ),
+      ],
     );
   }
 }
