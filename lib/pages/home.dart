@@ -286,19 +286,48 @@ class _HomePage extends State<HomePage> {
       centerTitle: true,
       elevation: 1,
       backgroundColor: Colors.white,
-      actions: [
-        GestureDetector(
-          
-          onTap: () {
-            // Navigator.pushNamed(context, '/settings');
-            debugPrint('Settings');
-          },
-          child: Container(
-            margin: const EdgeInsets.only(right: 13),
-            child: const Icon(Icons.more_horiz, color: Colors.black)
+      actions: <Widget>[
+        Container(
+          margin: const EdgeInsets.only(right: 10),
+          child: PopupMenuButton<int>(
+            icon: const Icon(Icons.more_horiz, color: Colors.black),
+            onSelected: (item) => handleClick(item),
+            itemBuilder: (context) => [
+              PopupMenuItem<int>(value: 0, child: Text('Modify Suggestions')),
+              PopupMenuItem<int>(value: 1, child: Text('Clear Suggestions')),
+            ],
           ),
         ),
       ],
     );
+  }
+
+  void handleClick(int item) {
+    switch (item) {
+      case 0:
+        debugPrint('Modify Suggestions');
+        break;
+      case 1:
+        //check the current size of the items
+        debugPrint('items.length: ${items.length}');
+        if (items.length >= 2) {
+          setState(() {
+            items.clear();
+            items.add(
+              FortuneItem(
+                  child: Text('1st Suggestion',
+                      style: TextStyle(color: Colors.white, fontSize: 20))),
+            );
+            items.add(
+              FortuneItem(
+                  child: Text('2nd Suggestion',
+                      style: TextStyle(color: Colors.white, fontSize: 20))),
+            );
+          });
+        }
+        //check the current size of the items
+        debugPrint('items.length: ${items.length}');
+        break;
+    }
   }
 }
