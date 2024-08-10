@@ -71,44 +71,7 @@ class _HomePage extends State<HomePage> {
             debugPrint('Result: $result');
             if (result == '1st Suggestion' || result == '2nd Suggestion') {
               //show error dialog
-              toastification.show(
-                context: context, // optional if you use ToastificationWrapper
-                type: ToastificationType.error,
-                style: ToastificationStyle.flatColored,
-                autoCloseDuration: const Duration(seconds: 5),
-                title: Text('Please enter valid suggestions!!'),
-                // you can also use RichText widget for title and description parameters
-                alignment: Alignment.bottomCenter,
-                direction: TextDirection.ltr,
-                animationDuration: const Duration(milliseconds: 300),
-                animationBuilder: (context, animation, alignment, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-                icon: const Icon(Icons.error),
-                showIcon: true, // show or hide the icon
-                primaryColor: Colors.red[100],
-                // backgroundColor: Colors.blue,
-                foregroundColor: Colors.black,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x07000000),
-                    blurRadius: 16,
-                    offset: Offset(0, 16),
-                    spreadRadius: 0,
-                  )
-                ],
-                showProgressBar: false,
-                closeButtonShowType: CloseButtonShowType.onHover,
-                closeOnClick: true,
-                pauseOnHover: true,
-              );
+              _showToast(context, "Please add more suggestions!!");
               return;
             }
             //add delay
@@ -188,43 +151,7 @@ class _HomePage extends State<HomePage> {
         onSubmitted: (text) {
           //should not be empty
           if (text.isEmpty) {
-            toastification.show(
-              context: context, // optional if you use ToastificationWrapper
-              type: ToastificationType.error,
-              style: ToastificationStyle.fillColored,
-              autoCloseDuration: const Duration(seconds: 5),
-              title: Text('Suggestion is empty!!'),
-              // you can also use RichText widget for title and description parameters
-              alignment: Alignment.bottomCenter,
-              direction: TextDirection.ltr,
-              animationDuration: const Duration(milliseconds: 300),
-              animationBuilder: (context, animation, alignment, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              },
-              icon: const Icon(Icons.error),
-              showIcon: true, // show or hide the icon
-              primaryColor: Colors.red[100],
-              // backgroundColor: Colors.blue,
-              foregroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x07000000),
-                  blurRadius: 16,
-                  offset: Offset(0, 16),
-                  spreadRadius: 0,
-                )
-              ],
-              showProgressBar: false,
-              closeButtonShowType: CloseButtonShowType.onHover,
-              closeOnClick: true,
-              pauseOnHover: true,
-            );
+            _showToast(context, "Suggestion is empty!!");
             return;
           }
           // check the list if 1st and 2nd suggestion is still there
@@ -272,6 +199,46 @@ class _HomePage extends State<HomePage> {
     );
   }
 
+  void _showToast(BuildContext context, String message){
+    toastification.show(
+              context: context, // optional if you use ToastificationWrapper
+              type: ToastificationType.error,
+              style: ToastificationStyle.fillColored,
+              autoCloseDuration: const Duration(seconds: 5),
+              title: Text(message),
+              // you can also use RichText widget for title and description parameters
+              alignment: Alignment.bottomCenter,
+              direction: TextDirection.ltr,
+              animationDuration: const Duration(milliseconds: 300),
+              animationBuilder: (context, animation, alignment, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+              icon: const Icon(Icons.error),
+              showIcon: true, // show or hide the icon
+              primaryColor: Colors.red[100],
+              // backgroundColor: Colors.blue,
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x07000000),
+                  blurRadius: 16,
+                  offset: Offset(0, 16),
+                  spreadRadius: 0,
+                )
+              ],
+              showProgressBar: false,
+              closeButtonShowType: CloseButtonShowType.onHover,
+              closeOnClick: true,
+              pauseOnHover: true,
+            );
+  }
+
   AppBar appBar() {
     return AppBar(
       title: const Text(
@@ -305,28 +272,25 @@ class _HomePage extends State<HomePage> {
   void handleClick(int item) {
     switch (item) {
       case 0:
-        debugPrint('Modify Suggestions');
-        break;
+        //allow user to modify the suggestions
+        
       case 1:
         //check the current size of the items
-        debugPrint('items.length: ${items.length}');
-        if (items.length >= 2) {
-          setState(() {
-            items.clear();
-            items.add(
-              FortuneItem(
-                  child: Text('1st Suggestion',
-                      style: TextStyle(color: Colors.white, fontSize: 20))),
-            );
-            items.add(
-              FortuneItem(
-                  child: Text('2nd Suggestion',
-                      style: TextStyle(color: Colors.white, fontSize: 20))),
-            );
-          });
-        }
+        setState(() {
+          items.clear();
+          items.add(
+            FortuneItem(
+                child: Text('1st Suggestion',
+                    style: TextStyle(color: Colors.white, fontSize: 20))),
+          );
+          items.add(
+            FortuneItem(
+                child: Text('2nd Suggestion',
+                    style: TextStyle(color: Colors.white, fontSize: 20))),
+          );
+        });
+        _showToast(context, "Suggestions cleared!!");
         //check the current size of the items
-        debugPrint('items.length: ${items.length}');
         break;
     }
   }
